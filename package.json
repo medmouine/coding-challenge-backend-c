@@ -2,9 +2,11 @@
   "name": "coding-challenge-backend-c",
   "version": "0.0.0",
   "description": "coding challenge in Nodejs",
-  "main": "app.js",
+  "main": "src/index.ts",
   "scripts": {
-    "start": "node app.js",
+    "start:dev": "nodemon",
+    "build:prod": "rimraf ./dist && tsc",
+    "start:prod": "NODE_ENV=production npm run build:prod && node dist/index.js",
     "test": "./node_modules/mocha/bin/mocha ./test/"
   },
   "author": "",
@@ -15,6 +17,13 @@
     "supertest": "^0.11.0"
   },
   "engines": {
-    "node": "0.10.26"
+    "node": "12.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^13.1.8",
+    "nodemon": "^2.0.2",
+    "rimraf": "^3.0.0",
+    "ts-node": "^8.6.2",
+    "typescript": "^3.7.5"
   }
 }
