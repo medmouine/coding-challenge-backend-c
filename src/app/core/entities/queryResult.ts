@@ -1,1 +1,3 @@
-export interface QueryResult {}
+export interface QueryResult {
+  label: string;
+}

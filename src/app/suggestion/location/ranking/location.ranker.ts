@@ -1,28 +1,38 @@
 import { Ranker } from '../../../core/definitions/ranker';
 import { LocationQueryResult } from '../location.query.result';
 import { LocationSuggestionInput } from '../location.suggestion.in';
-import { LocationSuggestionOutput } from '../location.suggestion.out';
-import * as _ from 'lodash';
+import { LocationRankingOut } from './location.ranking.out';
+import { LocationSubRanker } from './location.sub.ranker';
 
 export class LocationRanker implements Ranker {
-  private rankingFunctions: Function[] = [this.calculateScoreByQueryAccuracy];
-  score(queryResult: LocationQueryResult, suggestionInput: LocationSuggestionInput): LocationSuggestionOutput {
-    return { ...queryResult, score: this.calculateScore(queryResult, suggestionInput) };
+  constructor(private subRankers: LocationSubRanker[]) {}
+
+  public score = (queryResult: LocationQueryResult, suggestionInput: LocationSuggestionInput): LocationRankingOut =>
+    this.calculateScore(queryResult, suggestionInput);
+
+  private calculateScore = (
+    queryResult: LocationQueryResult,
+    suggestionInput: LocationSuggestionInput,
+  ): LocationRankingOut => ({
+    ...queryResult,
+    score: this.processSubrankings(queryResult, suggestionInput),
+  });
+
+  private processSubrankings(queryResult: LocationQueryResult, suggestionInput: LocationSuggestionInput) {
+    const applicableSubRankers: LocationSubRanker[] = this.subRankers.filter(sr => sr.isApplicable(suggestionInput));
+    const totalScore = this.getTotalScore(applicableSubRankers, queryResult, suggestionInput);
+    return this.calculateRelativeScore(totalScore, applicableSubRankers);
   }
 
-  calculateScore = (queryResult: LocationQueryResult, suggestionInput: LocationSuggestionInput): number =>
-    this.sumScores(queryResult, suggestionInput) / this.rankingFunctions.length;
+  private calculateRelativeScore = (totalScore: number, applicableSubRankers: LocationSubRanker[]) =>
+    totalScore / this.getTotalWeight(applicableSubRankers);
 
-  calculateScoreByQueryAccuracy(queryResult: LocationQueryResult, suggestionInput: LocationSuggestionInput): number {
-    const { name } = queryResult;
-    const { query } = suggestionInput;
+  private getTotalScore = (
+    applicableSubRankers: LocationSubRanker[],
+    queryResult: LocationQueryResult,
+    suggestionInput: LocationSuggestionInput,
+  ) => applicableSubRankers.reduce((t, sr) => (t += sr.score(queryResult, suggestionInput).score * sr.getWeight()), 0);
 
-    return this.getPercentageOfAccuracy(name, query);
-  }
-
-  getPercentageOfAccuracy = (resultName: string, query: string) =>
-    1 - resultName.length / resultName.replace(query, '').length;
-
-  sumScores = (queryResult: LocationQueryResult, suggestionInput: LocationSuggestionInput) =>
-    _.reduce(this.rankingFunctions, (sum, f) => (sum += f(queryResult, suggestionInput)), 0);
+  private getTotalWeight = (subRankers: LocationSubRanker[]) =>
+    subRankers.reduce((t, sr): number => (t += sr.getWeight()), 0);
 }

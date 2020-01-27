@@ -17,15 +17,17 @@
     "noImplicitReturns": true,             /* Report error when not all code paths in function return a value. */
     "esModuleInterop": true,                  /* Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'. */
     "resolveJsonModule": true,                /* Include modules imported with '.json' extension */
-    "forceConsistentCasingInFileNames": true  /* Disallow inconsistently-cased references to the same file. */
+    "forceConsistentCasingInFileNames": true,  /* Disallow inconsistently-cased references to the same file. */
+    "noEmit": true
   },
   "exclude": [
     "node_modules/*",
-    "test"
+    "test",
+    "src/**/*.spec.ts"
   ],
   "lint": [
     {
       "exclude": "**/node_modules/**/*"
     }
-  ]
+  ],
 }
