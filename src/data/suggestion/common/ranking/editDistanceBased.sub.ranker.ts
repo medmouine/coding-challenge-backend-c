@@ -13,10 +13,10 @@ export class EditDistanceBasedSubRanker implements Ranker {
   public isApplicable = (_: SuggestionInput): boolean => true;
 
   public score = (queryResult: QueryResult, suggestionInput: SuggestionInput): RankingOutput => ({
-    ...suggestionInput,
+    ...queryResult,
     score: EditDistanceBasedSubRanker.getAccuracyPercentage(queryResult, suggestionInput),
   });
 
   private static getAccuracyPercentage = (queryResult: QueryResult, suggestionInput: SuggestionInput) =>
-    1 - suggestionInput.query.length / queryResult.label.replace(suggestionInput.query, '').length;
+    1 - queryResult.label.replace(suggestionInput.query, '').length / queryResult.label.length;
 }
