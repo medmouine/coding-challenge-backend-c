@@ -1,8 +1,8 @@
 import { Data } from '../entities/data';
-import { IndexedData } from '../entities/indexedData';
 import { QueryResult } from '../entities/queryResult';
+import { IndexedData } from '../entities/indexedData';
 
 export interface Indexer {
-  index(data: Data[]): IndexedData[];
+  index(data: Data[]): IndexedData;
   getByQuery(query: string): QueryResult[];
 }

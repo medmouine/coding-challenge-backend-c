@@ -5,20 +5,24 @@
   "main": "src/frameworks/api/index.ts",
   "scripts": {
     "start:dev": "nodemon",
-    "build:prod": "rimraf ./dist && NODE_OPTIONS=--max-old-space-size=4098 babel src --out-dir dist --extensions '.ts,.js' --ignore 'src/**/*.spec.ts'",
-    "start:prod": "NODE_ENV=production npm run build:prod && node dist/index.js",
+    "build:prod": "rimraf ./dist && NODE_OPTIONS=--max-old-space-size=4098 babel src --out-dir dist --extensions '.ts,.js' --ignore 'src/**/*.spec.ts' && copyfiles data/*.tsv dist/",
+    "start:prod": "NODE_ENV=production yarn build:prod && node dist/index.js",
     "lint": "tsc --noEmit && eslint 'src/**/*.{js,ts}' --fix --quiet",
     "test": "jest"
   },
   "author": "",
   "license": "WTFPL",
   "dependencies": {
+    "@types/node-fetch": "^2.5.4",
     "body-parser": "^1.19.0",
+    "d3-dsv": "^1.2.0",
     "express": "^4.17.1",
     "geolib": "^3.2.1",
     "helmet": "^3.21.2",
     "joi": "^14.3.1",
-    "lodash": "^4.17.15"
+    "lodash": "^4.17.15",
+    "node-fetch": "^2.6.0",
+    "unzip": "^0.1.11"
   },
   "engines": {
     "node": "12.3.1"
@@ -28,15 +32,18 @@
     "@babel/core": "^7.8.3",
     "@babel/preset-env": "^7.8.3",
     "@babel/preset-typescript": "^7.8.3",
+    "@types/d3-dsv": "^1.0.36",
     "@types/express": "^4.17.2",
     "@types/helmet": "^0.0.45",
     "@types/jest": "^24.9.1",
     "@types/joi": "^14.3.4",
     "@types/lodash": "^4.14.149",
     "@types/node": "^13.1.8",
+    "@types/unzip": "^0.1.1",
     "@typescript-eslint/eslint-plugin": "^2.17.0",
     "@typescript-eslint/parser": "^2.17.0",
     "babel-jest": "^25.1.0",
+    "copyfiles": "^2.2.0",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.9.0",
     "eslint-plugin-prettier": "^3.1.2",

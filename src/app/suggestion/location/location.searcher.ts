@@ -17,7 +17,9 @@ export class LocationSearcher implements Searcher {
     return LocationSearcher.mapRankingOutputToSuggestionOutput(scoredResult);
   }
 
-  private static mapRankingOutputToSuggestionOutput = (scoredResult: LocationRankingOut[]) =>
+  private static mapRankingOutputToSuggestionOutput = (
+    scoredResult: LocationRankingOut[],
+  ): LocationSuggestionOutput[] =>
     scoredResult.map(sr => ({
       latitude: sr.latitude,
       longitude: sr.longitude,

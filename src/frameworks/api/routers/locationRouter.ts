@@ -1,13 +1,13 @@
 import express, { Request, Response, Router } from 'express';
-import { LocationSuggestion } from '../../../app/suggestion/locationSuggestion';
 import { LocationSuggestionInput } from '../../../app/suggestion/location/location.suggestion.in';
+import { LocationSuggestionOutput } from '../../../app/suggestion/location/location.suggestion.out';
+import { App } from '../../../app';
 
 export class LocationRouter {
   private router: Router;
-  private searchEngine: App;
   private suggestionPresenter: any;
 
-  constructor() {
+  constructor(private app: App) {
     this.router = express.Router();
     this.initRouter();
   }
@@ -19,7 +19,7 @@ export class LocationRouter {
   getSuggestions = (req: Request, res: Response) => {
     const locationSuggestionInput: LocationSuggestionInput = req.query;
     try {
-      const suggestions: LocationSuggestion[] = this.searchEngine.getSuggestions(locationSuggestionInput);
+      const suggestions: LocationSuggestionOutput[] = this.app.getSuggestions(locationSuggestionInput);
       const output = this.suggestionPresenter.present(suggestions);
 
       res.json(output);

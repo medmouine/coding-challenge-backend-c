@@ -1,9 +1,9 @@
 import { Indexer } from '../../../core/definitions/indexer';
 import { LocationQueryResult } from '../location.query.result';
-import { IndexedData } from '../../../core/entities/indexedData';
 import { LocationData } from '../location.data';
+import { LocationIndexedData } from './location.data.indexed';
 
 export interface LocationIndexer extends Indexer {
   getByQuery(query: string): LocationQueryResult[];
-  index(data: LocationData[]): IndexedData[];
+  index(data: LocationData[]): LocationIndexedData;
 }
